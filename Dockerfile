@@ -3,13 +3,7 @@ FROM amazoncorretto:17-al2023
 ARG GRADLE_VERSION=8.10
 ARG GRADLE_HOME=/opt/gradle
 
-RUN dnf install -y \
-    tar \
-    gzip \
-    unzip \
-    curl \
- && dnf clean all
-
+# Gradle インストール（dnf 不使用）
 RUN curl -fsSL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -o gradle.zip \
  && unzip gradle.zip -d /opt \
  && mv /opt/gradle-${GRADLE_VERSION} ${GRADLE_HOME} \
