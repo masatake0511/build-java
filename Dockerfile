@@ -1,17 +1,16 @@
-FROM amazonlinux:2023
+# Ubuntu 22.04 をベースにする
+FROM ubuntu:22.04
 
-# 最小限のツール
-RUN dnf install -y curl unzip tar gzip git && dnf clean all
-
-# Java (Amazon Corretto 17) を公式 tar でインストール
-RUN mkdir -p /opt/java && \
-    curl -fsSL https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz -o corretto.tar.gz && \
-    tar -xzf corretto.tar.gz -C /opt/java && \
-    rm -f corretto.tar.gz
-
-# JAVA_HOME 環境変数
-ENV JAVA_HOME=/opt/java/amazon-corretto-17
-ENV PATH=${JAVA_HOME}/bin:${PATH}
+# 必須ツールのインストール
+RUN apt-get update && apt-get install -y \
+      openjdk-17-jdk \
+      curl \
+      unzip \
+      git \
+      tar \
+      gzip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Gradle
 ARG GRADLE_VERSION=8.10
@@ -23,7 +22,8 @@ RUN curl -fsSL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION
     mv /opt/gradle-${GRADLE_VERSION} ${GRADLE_HOME} && \
     rm -f gradle.zip
 
+# 作業ディレクトリ
 WORKDIR /github/workspace
 
-# 確認
+# 確認用
 RUN java -version && gradle -v
