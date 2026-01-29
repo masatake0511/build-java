@@ -1,20 +1,19 @@
 FROM amazonlinux:2023
 
-# 最小限の必須バイナリ（curl, unzip, git は必要なら tarball で入れる）
-RUN yum install -y yum-utils && yum clean all
+# 最小限のツール
+RUN dnf install -y curl unzip tar gzip git && dnf clean all
 
-# Java (Amazon Corretto) を公式 tar でインストール
-ARG CORRETTO_VERSION=17.0.9.101-1
-RUN curl -fsSL https://corretto.aws/downloads/resources/${CORRETTO_VERSION}/amazon-corretto-${CORRETTO_VERSION}-linux-x64.tar.gz \
-    -o corretto.tar.gz && \
-    mkdir -p /opt/java && \
+# Java (Amazon Corretto 17) を公式 tar でインストール
+RUN mkdir -p /opt/java && \
+    curl -fsSL https://corretto.aws/downloads/latest/amazon-corretto-17-x64-linux-jdk.tar.gz -o corretto.tar.gz && \
     tar -xzf corretto.tar.gz -C /opt/java && \
     rm -f corretto.tar.gz
 
-ENV JAVA_HOME=/opt/java/amazon-corretto-${CORRETTO_VERSION}-linux-x64
+# JAVA_HOME 環境変数
+ENV JAVA_HOME=/opt/java/amazon-corretto-17
 ENV PATH=${JAVA_HOME}/bin:${PATH}
 
-# Gradle を tar でインストール
+# Gradle
 ARG GRADLE_VERSION=8.10
 ENV GRADLE_HOME=/opt/gradle
 ENV PATH=${GRADLE_HOME}/bin:${PATH}
