@@ -1,9 +1,9 @@
 FROM amazonlinux:2023
 
-# 必須ツールは curl / unzip だけに絞る
-RUN microdnf install -y curl unzip && microdnf clean all
+# 必須ツールだけ dnf でインストール
+RUN dnf install -y curl unzip git tar gzip && dnf clean all
 
-# Java は tar でインストール
+# Java を tar で入れる
 ARG CORRETTO_VERSION=17.0.9.101-1
 RUN curl -fsSL https://corretto.aws/downloads/resources/${CORRETTO_VERSION}/amazon-corretto-${CORRETTO_VERSION}-linux-x64.tar.gz \
     -o corretto.tar.gz && \
@@ -25,3 +25,5 @@ RUN curl -fsSL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION
     rm -f gradle.zip
 
 WORKDIR /github/workspace
+
+RUN java -version && gradle -v
