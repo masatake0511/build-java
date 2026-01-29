@@ -1,7 +1,6 @@
 FROM amazonlinux:2023
 
-RUN dnf update -y && \
-    dnf install -y \
+RUN dnf install -y \
       java-17-amazon-corretto \
       tar \
       gzip \
