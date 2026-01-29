@@ -1,4 +1,4 @@
-FROM amazonlinux:2023.3.20240108
+FROM amazonlinux:2023
 
 RUN dnf install -y \
       java-17-amazon-corretto \
