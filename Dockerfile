@@ -1,4 +1,4 @@
-FROM amazonlinux:2023
+FROM amazonlinux:2023.3.20240108
 
 RUN dnf install -y \
       java-17-amazon-corretto \
@@ -9,7 +9,6 @@ RUN dnf install -y \
       curl \
     && dnf clean all
 
-# Gradle
 ARG GRADLE_VERSION=8.10
 ENV GRADLE_HOME=/opt/gradle
 ENV PATH=${GRADLE_HOME}/bin:${PATH}
@@ -20,5 +19,3 @@ RUN curl -fsSL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION
     rm -f gradle.zip
 
 WORKDIR /github/workspace
-
-RUN java -version && gradle -v
